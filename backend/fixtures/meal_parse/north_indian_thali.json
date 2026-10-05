@@ -1,0 +1,40 @@
+{
+ "dishes": [
+  {
+   "name": "steamed rice",
+   "portion": 1,
+   "unit": "katori",
+   "grams": 140,
+   "confidence": 0.98
+  },
+  {
+   "name": "roti",
+   "portion": 2,
+   "unit": "piece",
+   "grams": 90,
+   "confidence": 0.96
+  },
+  {
+   "name": "dal",
+   "portion": 1,
+   "unit": "katori",
+   "grams": 150,
+   "confidence": 0.93
+  },
+  {
+   "name": "vegetable curry",
+   "portion": 1,
+   "unit": "katori",
+   "grams": 160,
+   "confidence": 0.84
+  },
+  {
+   "name": "meat curry",
+   "portion": 1,
+   "unit": "katori",
+   "grams": 140,
+   "confidence": 0.62
+  }
+ ],
+ "model": "openrouter:openai/gpt-5.4-mini"
+}

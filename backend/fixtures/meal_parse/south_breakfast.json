@@ -1,0 +1,26 @@
+{
+ "dishes": [
+  {
+   "name": "idli",
+   "portion": 4,
+   "unit": "piece",
+   "grams": 180,
+   "confidence": 0.96
+  },
+  {
+   "name": "sambar",
+   "portion": 1.2,
+   "unit": "katori",
+   "grams": 180,
+   "confidence": 0.94
+  },
+  {
+   "name": "coconut chutney",
+   "portion": 0.25,
+   "unit": "katori",
+   "grams": 35,
+   "confidence": 0.9
+  }
+ ],
+ "model": "openrouter:openai/gpt-5.4-mini"
+}

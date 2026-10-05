@@ -1,0 +1,21 @@
+fdc_id,dataset,description,energy_kcal,carb_by_difference_g,fibre_total_dietary_g,protein_g,fat_g,release
+167747,SR Legacy,"Lemon juice, raw",22.0,6.9,0.3,0.35,0.24,FoodData_Central_sr_legacy_food_csv_2018-04
+168106,SR Legacy,Papad,371.0,59.87,18.6,25.56,3.25,FoodData_Central_sr_legacy_food_csv_2018-04
+169655,SR Legacy,"Sugars, granulated",387.0,99.98,0.0,0.0,0.0,FoodData_Central_sr_legacy_food_csv_2018-04
+169714,SR Legacy,"Rice flour, white, unenriched",366.0,80.13,2.4,5.95,1.42,FoodData_Central_sr_legacy_food_csv_2018-04
+171017,SR Legacy,"Oil, sunflower, linoleic (less than 60%)",884.0,0.0,0.0,0.0,100.0,FoodData_Central_sr_legacy_food_csv_2018-04
+171052,SR Legacy,"Chicken, broilers or fryers, meat only, raw",119.0,0.0,0.0,21.39,3.08,FoodData_Central_sr_legacy_food_csv_2018-04
+171284,SR Legacy,"Yogurt, plain, whole milk",61.0,4.66,0.0,3.47,3.25,FoodData_Central_sr_legacy_food_csv_2018-04
+171890,SR Legacy,"Beverages, coffee, brewed, prepared with tap water",1.0,0.0,0.0,0.12,0.02,FoodData_Central_sr_legacy_food_csv_2018-04
+172337,SR Legacy,"Oil, mustard",884.0,0.0,0.0,0.0,100.0,FoodData_Central_sr_legacy_food_csv_2018-04
+172688,SR Legacy,"Bread, whole-wheat, commercially prepared",252.0,42.71,6.0,12.45,3.5,FoodData_Central_sr_legacy_food_csv_2018-04
+173424,SR Legacy,"Egg, whole, cooked, hard-boiled",155.0,1.12,0.0,12.58,10.61,FoodData_Central_sr_legacy_food_csv_2018-04
+174288,SR Legacy,Chickpea flour (besan),387.0,57.82,10.8,22.39,6.69,FoodData_Central_sr_legacy_food_csv_2018-04
+174924,SR Legacy,"Bread, white, commercially prepared (includes soft bread crumbs)",266.0,49.42,2.7,8.85,3.33,FoodData_Central_sr_legacy_food_csv_2018-04
+2707613,FNDDS 2021-2023,"Bread, naan",311.0,50.23,5.2,11.09,7.28,FoodData_Central_survey_food_csv_2024-10-31
+2707714,FNDDS 2021-2023,"Bread, puri",409.0,39.23,3.5,6.84,24.94,FoodData_Central_survey_food_csv_2024-10-31
+2708408,FNDDS 2021-2023,"Rice, white, cooked, no added fat",129.0,27.99,0.4,2.67,0.28,FoodData_Central_survey_food_csv_2024-10-31
+2708414,FNDDS 2021-2023,"Rice, brown, cooked, no added fat",123.0,25.76,1.0,2.43,1.11,FoodData_Central_survey_food_csv_2024-10-31
+2708730,FNDDS 2021-2023,Samosa,310.0,33.16,1.8,5.14,17.47,FoodData_Central_survey_food_csv_2024-10-31
+2710168,FNDDS 2021-2023,"Ghee, clarified butter",876.0,0.0,0.0,0.28,99.48,FoodData_Central_survey_food_csv_2024-10-31
+2710488,FNDDS 2021-2023,"Tea, hot, leaf, black",1.0,0.3,0.0,0.0,0.0,FoodData_Central_survey_food_csv_2024-10-31

@@ -1,0 +1,62 @@
+[
+ {
+  "lang": "en-IN",
+  "kind": "forecast",
+  "prompt": "If I have 2 rotis with a katori of dal for dinner now, how high will my sugar go?"
+ },
+ {
+  "lang": "en-IN",
+  "kind": "what_if",
+  "prompt": "What if I eat only half the rice with my fish curry tonight?"
+ },
+ {
+  "lang": "en-IN",
+  "kind": "next_check",
+  "prompt": "When should I check my sugar next?"
+ },
+ {
+  "lang": "hi-IN",
+  "kind": "forecast",
+  "prompt": "अगर मैं अभी 2 रोटी और एक कटोरी अरहर दाल खाऊँ तो मेरी शुगर कितनी बढ़ेगी?"
+ },
+ {
+  "lang": "hi-IN",
+  "kind": "what_if",
+  "prompt": "अगर राजमा चावल खाने के बाद 20 मिनट टहलूँ तो कितना फ़र्क पड़ेगा?"
+ },
+ {
+  "lang": "hi-IN",
+  "kind": "next_check",
+  "prompt": "अगली बार शुगर कब जाँच करूँ?"
+ },
+ {
+  "lang": "bn-IN",
+  "kind": "forecast",
+  "prompt": "রাতে ভাত আর মাছের ঝোল খেলে সুগার কত উঠবে?"
+ },
+ {
+  "lang": "bn-IN",
+  "kind": "what_if",
+  "prompt": "আজ রাতে ভাত অর্ধেক করে খেলে কী হবে? সঙ্গে ডাল আর মাছের ঝোল।"
+ },
+ {
+  "lang": "bn-IN",
+  "kind": "next_check",
+  "prompt": "পরের বার সুগার কখন মাপব?"
+ },
+ {
+  "lang": "kn-IN",
+  "kind": "forecast",
+  "prompt": "ಈಗ ಎರಡು ರಾಗಿ ಮುದ್ದೆ ಮತ್ತು ಸಾರು ತಿಂದರೆ ನನ್ನ ಸಕ್ಕರೆ ಎಷ್ಟು ಏರುತ್ತದೆ?"
+ },
+ {
+  "lang": "kn-IN",
+  "kind": "what_if",
+  "prompt": "ಚಿತ್ರಾನ್ನ ತಿಂದ ಮೇಲೆ 20 ನಿಮಿಷ ನಡೆದರೆ ಎಷ್ಟು ಸಹಾಯ ಆಗುತ್ತದೆ?"
+ },
+ {
+  "lang": "kn-IN",
+  "kind": "next_check",
+  "prompt": "ಮುಂದಿನ ಸಲ ಸಕ್ಕರೆ ಯಾವಾಗ ಪರೀಕ್ಷಿಸಬೇಕು?"
+ }
+]
