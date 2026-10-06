@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { Suspense, lazy, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { HelpCircle, Loader2, Plus, Table2, Droplet } from "lucide-react";
+import { Activity, HelpCircle, Loader2, PersonStanding, Plus, Table2, Droplet } from "lucide-react";
 import type { Assimilation, Forecast, RevealResult } from "@/api/types";
 import { ApiError, UnreachableError } from "@/api/http";
 import { useActivePatientId, useAdvance, useForecast, usePatients, useReveal, useTwinState, useWhatIf } from "@/api/hooks";
@@ -18,6 +18,18 @@ import { canAdvance } from "@/lib/replay";
 import { direction, isUrgent, widthChange } from "@/lib/evidence";
 
 const RANGES = [6, 12, 36];
+
+// The 3-D glass body (three.js) is its own chunk, loaded only when the Body view is shown.
+const BodyView = lazy(() => import("@/body/BodyView"));
+
+function BodySkeleton() {
+  const { t } = useTranslation();
+  return (
+    <div className="skeleton-night flex h-[430px] items-center justify-center rounded-3xl md:h-[480px]" aria-busy="true">
+      <span className="text-sm text-moon-2">{t("body.loading")}</span>
+    </div>
+  );
+}
 
 function Legend({ two }: { two: boolean }) {
   const { t } = useTranslation();
@@ -90,6 +102,9 @@ export function TwinStagePage() {
   const change = useApp((s) => s.stageChange);
   const showSafety = useApp((s) => s.showSafety);
   const presentation = useApp((s) => s.presentation);
+  const stageView = useApp((s) => s.stageView);
+  const setStageView = useApp((s) => s.setStageView);
+  const bodyMode = stageView !== "chart";
   const state = useTwinState(pid, ladder);
   const advance = useAdvance(pid, ladder);
   const reveal = useReveal(pid, ladder);
@@ -292,7 +307,29 @@ export function TwinStagePage() {
           <div className="min-w-0 space-y-3 lg:col-span-8">
             <div className="rounded-4xl border border-night-line/50 bg-night-2/40 px-1 pb-2 pt-2 sm:px-3" data-tour="river">
               <div className="flex flex-wrap items-center justify-between gap-2 px-2 pb-1">
-                <h2 className="text-base font-bold text-moon">{chartTitle}</h2>
+                <div className="flex flex-wrap items-center gap-2">
+                  <h2 className="text-base font-bold text-moon">{chartTitle}</h2>
+                  <div role="radiogroup" aria-label={t("body.toggle.label")} className="flex rounded-full border border-night-line/70 p-0.5" data-stage-view>
+                    {(["body", "chart"] as const).map((v) => {
+                      const on = (v === "body") === bodyMode;
+                      const Icon = v === "body" ? PersonStanding : Activity;
+                      return (
+                        <button
+                          key={v}
+                          type="button"
+                          role="radio"
+                          aria-checked={on}
+                          onClick={() => setStageView(v)}
+                          className={`inline-flex min-h-[32px] items-center gap-1 rounded-full px-3 text-xs font-semibold ${on ? "bg-marigold text-night" : "text-moon-2 hover:text-moon"}`}
+                          data-stage-view-option={v}
+                        >
+                          <Icon size={14} aria-hidden />
+                          {t(`body.toggle.${v}`)}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
                 <div className="flex items-center gap-1.5">
                   {(state.isFetching || dinnerFc.isFetching || wi.isFetching) && (
                     <span className="inline-flex items-center gap-1.5 text-xs text-moon-3" role="status">
@@ -300,24 +337,28 @@ export function TwinStagePage() {
                       <span className="hidden sm:inline">{t("stage.updating")}</span>
                     </span>
                   )}
-                  <div role="radiogroup" aria-label={t("stage.range")} className="flex rounded-full border border-night-line/70 p-0.5">
-                    {RANGES.map((r) => (
-                      <button
-                        key={r}
-                        type="button"
-                        role="radio"
-                        aria-checked={range === r}
-                        onClick={() => setRange(r)}
-                        className={`num min-h-[32px] rounded-full px-2.5 text-xs font-semibold ${range === r ? "bg-moon text-night" : "text-moon-2 hover:text-moon"}`}
-                      >
-                        {t("stage.rangeHours", { n: r })}
+                  {!bodyMode && (
+                    <>
+                      <div role="radiogroup" aria-label={t("stage.range")} className="flex rounded-full border border-night-line/70 p-0.5">
+                        {RANGES.map((r) => (
+                          <button
+                            key={r}
+                            type="button"
+                            role="radio"
+                            aria-checked={range === r}
+                            onClick={() => setRange(r)}
+                            className={`num min-h-[32px] rounded-full px-2.5 text-xs font-semibold ${range === r ? "bg-moon text-night" : "text-moon-2 hover:text-moon"}`}
+                          >
+                            {t("stage.rangeHours", { n: r })}
+                          </button>
+                        ))}
+                      </div>
+                      <button type="button" onClick={() => setTable((v) => !v)} aria-pressed={table} className="btn-night h-9 min-h-0 px-2.5 text-xs" title={t("chartTable.toggle")}>
+                        <Table2 size={15} aria-hidden />
+                        <span className="sr-only sm:not-sr-only">{t("chartTable.toggleShort")}</span>
                       </button>
-                    ))}
-                  </div>
-                  <button type="button" onClick={() => setTable((v) => !v)} aria-pressed={table} className="btn-night h-9 min-h-0 px-2.5 text-xs" title={t("chartTable.toggle")}>
-                    <Table2 size={15} aria-hidden />
-                    <span className="sr-only sm:not-sr-only">{t("chartTable.toggleShort")}</span>
-                  </button>
+                    </>
+                  )}
                   {shownFc && (
                     <button type="button" onClick={() => openWhy(shownFc.forecast_id)} className="btn-night h-9 min-h-0 px-3 text-xs">
                       <HelpCircle size={15} aria-hidden />
@@ -326,7 +367,26 @@ export function TwinStagePage() {
                   )}
                 </div>
               </div>
-              {s ? (
+              {bodyMode ? (
+                s ? (
+                  <div className="px-1 pb-1 sm:px-0">
+                    <Suspense fallback={<BodySkeleton />}>
+                      <BodyView
+                        pid={pid}
+                        ladder={ladder}
+                        state={s}
+                        dinner={dinner}
+                        change={change}
+                        riskBaseline={shownFc?.p_high ?? null}
+                        riskScenario={futures?.scenario?.p_high ?? null}
+                        presentation={presentation}
+                      />
+                    </Suspense>
+                  </div>
+                ) : state.isError ? null : (
+                  <BodySkeleton />
+                )
+              ) : s ? (
                 <GlucoseRiver
                   state={s}
                   rangeHours={range}
@@ -341,10 +401,12 @@ export function TwinStagePage() {
               ) : state.isError ? null : (
                 <div className="skeleton-night h-[268px] sm:h-[360px]" aria-busy="true" />
               )}
-              <div className="mt-1 px-2">
-                <Legend two={twoFutures} />
-              </div>
-              {table && s && (
+              {!bodyMode && (
+                <div className="mt-1 px-2">
+                  <Legend two={twoFutures} />
+                </div>
+              )}
+              {!bodyMode && table && s && (
                 <div className="mt-2 px-1">
                   <ChartTable state={s} futures={futures} rangeHours={range} />
                 </div>

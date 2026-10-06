@@ -265,6 +265,54 @@ html[lang="kn-IN"] {
   animation: breathe 6s ease-in-out infinite;
 }
 
+/* Body view time scrubber: a transparent native range over a custom track (keyboard + screen readers keep working). */
+.body-range {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  margin: 0;
+}
+.body-range::-webkit-slider-runnable-track {
+  height: 100%;
+  background: transparent;
+}
+.body-range::-moz-range-track {
+  height: 100%;
+  background: transparent;
+}
+.body-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  margin-top: 7px;
+  border-radius: 9999px;
+  background: rgb(var(--paper));
+  border: 3px solid rgb(var(--marigold));
+  box-shadow: 0 0 0 5px rgb(var(--marigold) / 0.22), 0 2px 8px rgb(0 0 0 / 0.4);
+}
+.body-range::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background: rgb(var(--paper));
+  border: 3px solid rgb(var(--marigold));
+  box-shadow: 0 0 0 5px rgb(var(--marigold) / 0.22);
+}
+.body-stage {
+  background:
+    radial-gradient(60% 55% at 50% 42%, rgb(124 108 240 / 0.2), transparent 70%),
+    radial-gradient(40% 30% at 50% 96%, rgb(43 179 163 / 0.14), transparent 70%),
+    linear-gradient(180deg, rgb(14 18 48 / 0.2), rgb(10 13 36 / 0.65));
+}
+@keyframes body-flow {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+.body-flow {
+  animation: body-flow linear infinite;
+}
+
 /* Presentation mode: larger labels, a cleaner composition, no footer. */
 html.presentation {
   font-size: 112.5%;

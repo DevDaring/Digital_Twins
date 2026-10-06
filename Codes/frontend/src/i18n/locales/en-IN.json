@@ -1106,5 +1106,130 @@
     "call108": "Call 108",
     "understood": "I understand",
     "footer": "Pratifalan never recommends insulin or medicine doses. If in doubt, contact a doctor."
+  },
+  "body": {
+    "toggle": {
+      "label": "How to show the next hours",
+      "body": "Body",
+      "chart": "Chart"
+    },
+    "honesty": "Simplified physiology model — not a measurement of your organs · Only blood glucose is validated",
+    "loading": "Building the glass body…",
+    "loadError": "Could not load the body view.",
+    "canvasLabel": "Glass body of your twin with simulated glucose flows. The organ list below shows the same values as text.",
+    "hint": "Drag to turn · scroll or pinch to zoom · tap an organ",
+    "hintKeys": "Arrow keys turn the body, + and − zoom. Choose an organ in the list to open it.",
+    "noWebgl": "3-D is not available on this device, so the simple view is shown.",
+    "view": {
+      "controls": "Camera",
+      "front": "Front",
+      "side": "Side",
+      "back": "Back",
+      "follow": "Follow the meal",
+      "reset": "Reset view",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "simple": "Simple view",
+      "threeD": "3-D view"
+    },
+    "time": {
+      "label": "Time after now",
+      "now": "Now",
+      "plusMin": "+{{n}} min",
+      "plusH": "+{{n}} h",
+      "play": "Play the next 4 hours",
+      "pause": "Pause",
+      "step": "Step 15 minutes",
+      "meal": "Dinner",
+      "exploratory": "Exploratory (beyond 2 h)",
+      "validated": "Tested (first 2 h)"
+    },
+    "card": {
+      "bloodGlucose": "Blood glucose",
+      "band": "90% likely {{lo}}–{{hi}}",
+      "highChance": "Chance above 180 in 2 h"
+    },
+    "scenario": {
+      "label": "Which future to show",
+      "diffTitle": "Biggest simulated changes",
+      "change": "{{organ}} {{d}} {{unit}} at {{time}}",
+      "peak": "Peak {{d}} mg/dL",
+      "noChange": "The organ flows barely change."
+    },
+    "organs": {
+      "title": "Organs and flows",
+      "hint": "Choose one to see its next 4 hours."
+    },
+    "textView": {
+      "show": "Text view",
+      "hide": "Hide text view",
+      "caption": "All values at {{time}}",
+      "organ": "Organ or flow",
+      "value": "Value",
+      "range": "Likely range",
+      "status": "Status"
+    },
+    "panel": {
+      "now": "At {{time}}",
+      "range": "Across the twin's simulations (10–90%): {{lo}} to {{hi}}",
+      "bandBlood": "90% band: {{lo}} to {{hi}} mg/dL",
+      "spark": "Next 4 hours",
+      "sparkLabel": "{{organ}} over the next 4 hours",
+      "simulatedBy": "Simulated by the physiology model",
+      "validated2h": "Validated (2 h)",
+      "releasing": "Releasing glucose into the blood",
+      "takingUp": "Taking glucose out of the blood",
+      "steady": "About balanced"
+    },
+    "live": "{{time}}: blood glucose about {{g}} mg/dL, likely {{lo}} to {{hi}}.",
+    "unit": {
+      "g": "g carbs",
+      "flow": "mg/dL per min",
+      "insulinRate": "µU/mL per min",
+      "insulinAbove": "µU/mL above usual",
+      "mgdl": "mg/dL"
+    },
+    "part": {
+      "stomach": {
+        "name": "Stomach",
+        "desc": "Food from the meal still waiting in the stomach, counted as grams of carbs."
+      },
+      "intestine": {
+        "name": "Intestine",
+        "desc": "Carbs being digested and absorbed in the gut."
+      },
+      "gut_to_blood": {
+        "name": "Sugar into blood",
+        "desc": "How fast sugar from food is moving from the gut into the blood."
+      },
+      "liver": {
+        "name": "Liver",
+        "desc": "The liver pulls sugar back towards your usual level: it releases sugar when you are lower and takes it up when you are higher."
+      },
+      "pancreas": {
+        "name": "Pancreas",
+        "desc": "Insulin the pancreas releases because sugar is above your usual level."
+      },
+      "insulin": {
+        "name": "Insulin in blood",
+        "desc": "Insulin above your usual level. Insulin helps muscles and fat take sugar out of the blood."
+      },
+      "insulin_uptake": {
+        "name": "Muscles and fat (insulin)",
+        "desc": "Sugar moved out of the blood into muscles and fat with the help of insulin."
+      },
+      "exercise_uptake": {
+        "name": "Muscles working",
+        "desc": "Extra sugar your muscles use when you move, for example on a walk."
+      },
+      "unexplained": {
+        "name": "Unexplained drift",
+        "desc": "A recent trend the model cannot explain, such as stress, illness or food that was not logged."
+      },
+      "blood": {
+        "name": "Blood glucose",
+        "desc": "Sugar in your blood: the twin's forecast. This is the only part checked against real readings (for the first 2 hours)."
+      }
+    }
   }
 }

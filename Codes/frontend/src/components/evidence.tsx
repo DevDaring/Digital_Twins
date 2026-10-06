@@ -27,7 +27,7 @@ const TONE_PAPER: Record<string, string> = {
  * Evidence-status chip next to a number: measured, estimated, simulated, validated, exploratory
  * or not validated. Tapping (or focusing) it explains the status in everyday language.
  */
-export function EvidenceChip({ status, tone = "paper", explain = true }: { status: ClaimStatus; tone?: "paper" | "night"; explain?: boolean }) {
+export function EvidenceChip({ status, tone = "paper", explain = true, label }: { status: ClaimStatus; tone?: "paper" | "night"; explain?: boolean; label?: string }) {
   const { t } = useTranslation();
   const meta = STATUS_META[status];
   const Icon = ICON[meta.icon];
@@ -35,12 +35,12 @@ export function EvidenceChip({ status, tone = "paper", explain = true }: { statu
   const chip = (
     <span className={`inline-flex items-center gap-1 whitespace-nowrap rounded-full border px-2 py-0.5 text-[0.7rem] font-semibold leading-tight ${cls}`}>
       <Icon size={11} aria-hidden />
-      {t(`evidence.status.${status}`)}
+      {label ?? t(`evidence.status.${status}`)}
     </span>
   );
   if (!explain) return chip;
   return (
-    <InfoTip label={`${t(`evidence.status.${status}`)}: ${t(`evidence.explain.${status}`)}`} tone={tone}>
+    <InfoTip label={`${label ?? t(`evidence.status.${status}`)}: ${t(`evidence.explain.${status}`)}`} tone={tone}>
       {chip}
     </InfoTip>
   );

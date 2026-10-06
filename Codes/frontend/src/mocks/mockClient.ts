@@ -23,6 +23,7 @@ import { receiptToMarkdown } from "@/lib/evidence";
 import { ApiError } from "@/api/http";
 import { mockChat, pendingActions } from "./agent";
 import { assessReading } from "./safety";
+import { buildBody } from "./body";
 import {
   FOODS,
   LAB_FIELDS,
@@ -214,6 +215,20 @@ export const mockClient: ApiClient = {
         ? "The difference is inside the twin's uncertainty, so it is too small to call."
         : "The difference is larger than the twin's uncertainty.",
     };
+  },
+  async body(pid, body) {
+    await wait(240, 520);
+    if (body.scenario && !body.meal) throw new ApiError(422, "A scenario needs the meal it changes (meal).", { detail: "A scenario needs the meal it changes (meal)." });
+    const model = modelById(pid);
+    const st = buildState(model, body.ladder);
+    const meal = body.meal ? { minutes_from_now: 15, ...body.meal } : undefined;
+    const base = buildForecast(model, body.ladder, { meal });
+    let scen = null;
+    if (meal && body.scenario) {
+      const sc = applyScenario(meal, body.scenario);
+      scen = buildForecast(model, body.ladder, { meal: { ...sc.meal, carbs: sc.meal.carbs * sc.gainScale }, walk: sc.walk });
+    }
+    return buildBody(pid, { ...body, meal }, base.origin, base, scen, st.estimate);
   },
   async nextBestPrick(pid, ladder) {
     await wait();

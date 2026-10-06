@@ -594,7 +594,8 @@ class TwinEngine:
                 mets[w0: w0 + int(walk // M.DT)] = 3.5
         return carbs, slow, mets
 
-    def _simulate_many(self, lv: Live, snap: PF.Snapshot, variants: list[dict], seed: int) -> list[np.ndarray]:
+    def _simulate_many(self, lv: Live, snap: PF.Snapshot, variants: list[dict], seed: int,
+                       states_out: list[dict] | None = None) -> list[np.ndarray]:
         """Simulate several input/parameter variants of the same particles in ONE batched loop.
 
         Each variant: {"meal", "scen", "logged", "overrides"}. All variants share the same
@@ -620,9 +621,19 @@ class TwinEngine:
             cs.append(np.repeat(c, per, axis=1))
             ss.append(np.repeat(sl, per, axis=1))
             ms.append(np.repeat(me, per, axis=1))
-        out = _propagate_crn(np.concatenate(xs), np.exp(np.concatenate(lts)), np.concatenate(cs, axis=1),
-                             np.concatenate(ss, axis=1), np.concatenate(ms, axis=1),
-                             np.repeat(hours[:, None], nv * mm, axis=1), np.random.default_rng(seed), nv)
+        rec: list[np.ndarray] | None = [] if states_out is not None else None
+        th_all = np.exp(np.concatenate(lts))
+        slow_all = np.concatenate(ss, axis=1)
+        mets_all = np.concatenate(ms, axis=1)
+        x0_all = np.concatenate(xs)
+        out = _propagate_crn(x0_all, th_all, np.concatenate(cs, axis=1), slow_all, mets_all,
+                             np.repeat(hours[:, None], nv * mm, axis=1), np.random.default_rng(seed), nv, rec)
+        if states_out is not None and rec is not None:
+            st = np.stack(rec)  # (H, nv*mm, N_STATE)
+            for k in range(nv):
+                seg = slice(k * mm, (k + 1) * mm)
+                states_out.append({"x0": x0_all[seg], "states": st[:, seg, :], "theta": th_all[seg],
+                                   "slow": slow_all[:, seg], "slow0": float(lv.b.tl.slow[i])})
         return [out[:, k * mm:(k + 1) * mm].T.copy() for k in range(nv)]
 
     def _simulate(self, lv: Live, snap: PF.Snapshot, meal: dict | None, scen: dict | None,
@@ -1055,6 +1066,57 @@ class TwinEngine:
                 "baseline_id": fb["forecast_id"]}
         return out, [(fb["forecast_id"], ctx_b), (fs["forecast_id"], sctx)]
 
+    # ------------------------------------------------------------------ body view
+    def body(self, pid: str, ladder: str, events: list[dict], meal: dict | None = None,
+             scenario: dict | None = None, *, offset: int = 0, rev: dict | None = None) -> dict:
+        """Per-organ glucose flows of the mechanistic layer for the 3-D body view.
+
+        The same particles, inputs and random numbers as ``forecast`` (seed 21), so the blood
+        values match the chart. Organ flows are SIMULATED by the simplified physiology model;
+        only blood glucose is validated (see reports/).
+        """
+        key = _key("body", pid, ladder, _ev_key(events), meal, scenario, int(offset), rev)
+        out = copy.deepcopy(self._cache.get_or(key, lambda: self._body(pid, ladder, events, meal, scenario,
+                                                                       offset, rev)))
+        # make the baseline forecast addressable by explain / receipt, like forecast() does
+        _, ctx = self._forecast_cached(pid, ladder, events, meal, 240, True, offset, rev)
+        self._remember(out["baseline"]["forecast_id"], ctx)
+        return out
+
+    def _body(self, pid: str, ladder: str, events: list[dict], meal: dict | None, scenario: dict | None,
+              offset: int, rev: dict | None) -> dict:
+        fb, ctx = self._forecast_cached(pid, ladder, events, meal, 240, True, offset, rev)
+        lv, snap, hyb, logged = ctx["lv"], ctx["snap"], ctx["hy"], ctx["logged"]
+        variants = [{"meal": meal, "scen": None, "logged": logged}]
+        if scenario and meal:
+            variants.append({"meal": meal, "scen": scenario, "logged": logged})
+        states: list[dict] = []
+        self._simulate_many(lv, snap, variants, seed=21, states_out=states)
+        origin = lv.b.tl.t[lv.i]
+        times = [self._fmt(pid, origin + np.timedelta64(5 * k, "m")) for k in range(FC_STEPS + 1)]
+        g0 = snap.x[:, 0]
+        now_blood = [float(np.quantile(g0, 0.05)), float(np.median(g0)), float(np.quantile(g0, 0.95))]
+
+        def blood_of(traj: dict) -> dict:
+            return {k: _r([now_blood[i], *traj[k]]) for i, k in ((0, "q05"), (1, "q50"), (2, "q95"))}
+
+        base = {"forecast_id": fb["forecast_id"], "blood": blood_of(fb["traj"]),
+                "fluxes": _organ_fluxes(states[0]), "learned_correction": _r([0.0, *hyb["r_curve"]])}
+        scen_out = None
+        scen_label = None
+        if len(states) > 1 and meal and scenario:
+            w = self.what_if(pid, ladder, events, meal, scenario, offset=offset, rev=rev)
+            scen_out = {"forecast_id": w["scenario"]["forecast_id"], "blood": blood_of(w["scenario"]["traj"]),
+                        "fluxes": _organ_fluxes(states[1]), "learned_correction": base["learned_correction"]}
+            scen_label = scenario.get("label") or "Scenario"
+        return {
+            "persona_id": pid, "replay_now": self._fmt(pid, origin), "t": times,
+            "validated_horizon_min": VALIDATED_HORIZON_MIN,
+            "label_en": "Simplified physiology model — not a measurement of your organs",
+            "validated_en": "Only blood glucose (the forecast) is validated; organ flows are simulated by the model.",
+            "organs": ORGANS, "baseline": base, "scenario": scen_out, "scenario_label": scen_label,
+        }
+
     def _package(self, pid: str, lv: Live, hy: dict, ladder: str, rev: dict | None) -> dict:
         origin = lv.b.tl.t[lv.i]
         times = [self._fmt(pid, origin + np.timedelta64(5 * (k + 1), "m")) for k in range(FC_STEPS)]
@@ -1330,8 +1392,64 @@ def _single_thread(bundle: HY.HybridBundle) -> None:
                 pass
 
 
+ORGANS: list[dict] = [
+    {"key": "stomach", "label_en": "Stomach", "unit": "g carbs",
+     "description_en": "Carbohydrate from the meal still waiting in the stomach (first gut compartment).",
+     "status": "simulated"},
+    {"key": "intestine", "label_en": "Intestine", "unit": "g carbs",
+     "description_en": "Carbohydrate being absorbed in the intestine (second gut compartment).", "status": "simulated"},
+    {"key": "gut_to_blood", "label_en": "From gut into blood", "unit": "mg/dL per min",
+     "description_en": "How fast glucose from food is entering the blood.", "status": "simulated"},
+    {"key": "liver", "label_en": "Liver and baseline balance", "unit": "mg/dL per min",
+     "description_en": "Pulls glucose back toward your usual level: positive = releasing glucose, "
+                       "negative = taking it up.", "status": "simulated"},
+    {"key": "pancreas", "label_en": "Pancreas (insulin release)", "unit": "µU/mL per min",
+     "description_en": "Insulin released in response to glucose above your usual level.", "status": "simulated"},
+    {"key": "insulin", "label_en": "Insulin in blood", "unit": "µU/mL above usual",
+     "description_en": "Insulin above your usual level, which helps muscles and fat take up glucose.",
+     "status": "simulated"},
+    {"key": "insulin_uptake", "label_en": "Muscle and fat uptake (insulin)", "unit": "mg/dL per min",
+     "description_en": "Glucose moved out of the blood with the help of insulin.", "status": "simulated"},
+    {"key": "exercise_uptake", "label_en": "Muscles working", "unit": "mg/dL per min",
+     "description_en": "Extra glucose used by muscles during and after activity such as a walk.",
+     "status": "simulated"},
+    {"key": "unexplained", "label_en": "Unexplained trend", "unit": "mg/dL per min",
+     "description_en": "Recent drift the physiology model cannot explain (stress, illness, unlogged food...).",
+     "status": "simulated"},
+]
+
+
+def _organ_fluxes(sv: dict) -> dict:
+    """Median and 10-90% range across particles of each organ flow, at 'now' and every 5 min.
+
+    Uses the mechanistic model's own terms (twin/model.py ``_deriv``):
+    gut -> blood = F_BIO*1000*(KABS/slow)*Q2/VG; liver/baseline = SG*(GB - G);
+    pancreas = GAM*max(G - GB, 0); insulin uptake = X*G; exercise uptake = E*G; drift = D.
+    """
+    th = sv["theta"]
+    SG, GAM, KABS, GB = th[:, 1], th[:, 2], th[:, 3], th[:, 4]
+
+    def terms(x: np.ndarray, slow: np.ndarray | float) -> dict[str, np.ndarray]:
+        G, X, Ins, Q1, Q2, E, D = (x[..., k] for k in range(M.N_STATE))
+        return {"stomach": Q1, "intestine": Q2,
+                "gut_to_blood": M.F_BIO * 1000.0 * (KABS / slow) * Q2 / M.VG_DL,
+                "liver": SG * (GB - G), "pancreas": GAM * np.maximum(G - GB, 0.0), "insulin": Ins,
+                "insulin_uptake": X * G, "exercise_uptake": E * G, "unexplained": D}
+
+    now = terms(sv["x0"], sv["slow0"])
+    later = terms(sv["states"], sv["slow"])
+    out = {}
+    for k in now:
+        series = np.vstack([now[k][None, :], later[k]])  # (H+1, m)
+        nd = 2 if k in ("gut_to_blood", "liver", "insulin_uptake", "exercise_uptake", "unexplained") else 1
+        out[k] = {q: [round(float(v), nd + 1) for v in np.quantile(series, qq, axis=1)]
+                  for q, qq in (("q10", 0.1), ("q50", 0.5), ("q90", 0.9))}
+    return out
+
+
 def _propagate_crn(x: np.ndarray, th: np.ndarray, carbs: np.ndarray, slow: np.ndarray, mets: np.ndarray,
-                   hour: np.ndarray, rng: np.random.Generator, n_var: int) -> np.ndarray:
+                   hour: np.ndarray, rng: np.random.Generator, n_var: int,
+                   record: list[np.ndarray] | None = None) -> np.ndarray:
     """RK4-propagate ``n_var`` stacked copies of the same particle set with shared noise.
 
     Inputs are per particle, shape (H, n_var * m). Noise is drawn exactly like
@@ -1350,6 +1468,8 @@ def _propagate_crn(x: np.ndarray, th: np.ndarray, carbs: np.ndarray, slow: np.nd
         x[:, 6] += np.tile(dn, n_var)
         x[:, 0] = np.clip(x[:, 0] + np.tile(gn, n_var), 30, 600)
         out[k] = x[:, 0]
+        if record is not None:
+            record.append(x.copy())
     return out
 
 

@@ -241,6 +241,54 @@ export interface WhatIfRequest {
   base_meal: MealInput;
   scenario: Scenario;
 }
+/** POST /api/twin/{pid}/body: per-organ flows of the simplified physiology model (SIMULATED). */
+export type OrganKey =
+  | "stomach"
+  | "intestine"
+  | "gut_to_blood"
+  | "liver"
+  | "pancreas"
+  | "insulin"
+  | "insulin_uptake"
+  | "exercise_uptake"
+  | "unexplained";
+export interface BodyRequest {
+  ladder: Ladder;
+  meal?: MealInput;
+  /** Requires `meal`. */
+  scenario?: Scenario;
+}
+export interface FluxSeries {
+  q10: number[];
+  q50: number[];
+  q90: number[];
+}
+export interface BodyVariant {
+  forecast_id: string;
+  blood: { q05: number[]; q50: number[]; q95: number[] };
+  fluxes: Record<OrganKey, FluxSeries>;
+  learned_correction: number[];
+}
+export interface OrganMeta {
+  key: OrganKey;
+  label_en: string;
+  unit: string;
+  description_en: string;
+  status: "simulated";
+}
+export interface BodyView {
+  persona_id: string;
+  replay_now: string;
+  /** t[0] is the replay now, then every 5 min for 4 h (49 points). */
+  t: string[];
+  validated_horizon_min: number;
+  label_en: string;
+  validated_en: string;
+  organs: OrganMeta[];
+  baseline: BodyVariant;
+  scenario: BodyVariant | null;
+  scenario_label: string | null;
+}
 export interface WhatIf {
   baseline: Forecast;
   scenario: Forecast;
@@ -591,6 +639,7 @@ export interface ApiClient {
   twinState(pid: string, ladder: Ladder, reveal?: boolean): Promise<TwinState>;
   forecast(pid: string, body: ForecastRequest): Promise<Forecast>;
   whatIf(pid: string, body: WhatIfRequest): Promise<WhatIf>;
+  body(pid: string, body: BodyRequest): Promise<BodyView>;
   nextBestPrick(pid: string, ladder: Ladder): Promise<NextBestPrick>;
   assimilate(pid: string, body: AssimilateRequest, lang?: Lang): Promise<Assimilation>;
   advance(pid: string, body: AdvanceRequest): Promise<TwinState>;

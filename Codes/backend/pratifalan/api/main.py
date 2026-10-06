@@ -555,20 +555,11 @@ class ScenarioIn(BaseModel):
     label: str | None = None
 
 
-class WhatIfIn(BaseModel):
-    ladder: LadderQ = "2"
-    base_meal: MealIn
-    scenario: ScenarioIn
-
-
-@app.post("/api/twin/{pid}/what_if", tags=["twin"], response_model=S.WhatIf, response_model_exclude_unset=True,
-          summary="what_if: pinned baseline vs scenario on the same particles; a model simulation, not a proven effect")
-def twin_what_if(pid: str, body: WhatIfIn, user: User = Depends(current_user)) -> Any:
-    _persona(pid)
-    base = body.base_meal.model_dump(exclude_none=True)
-    scen = body.scenario.model_dump(exclude_none=True)
+def _scenario_dict(sc: ScenarioIn, base: dict) -> dict:
+    """Scenario fields for the engine; a food swap becomes carb/fibre/fat/protein deltas."""
+    scen = sc.model_dump(exclude_none=True)
     scen.pop("swap", None)
-    swap = body.scenario.swap
+    swap = sc.swap
     if swap is not None:
         a, b = food.get(swap.from_), food.get(swap.to)
         if a is None or b is None:
@@ -583,10 +574,46 @@ def twin_what_if(pid: str, body: WhatIfIn, user: User = Depends(current_user)) -
         scen["fibre_delta"] = k * (tq * b["fibre_g"] - fq * a["fibre_g"])
         scen["fat_delta"] = k * (tq * b["fat_g"] - fq * a["fat_g"])
         scen["protein_delta"] = k * (tq * b["protein_g"] - fq * a["protein_g"])
+    return scen
+
+
+class BodyIn(BaseModel):
+    ladder: LadderQ = "2"
+    meal: MealIn | None = None
+    scenario: ScenarioIn | None = None
+
+
+class WhatIfIn(BaseModel):
+    ladder: LadderQ = "2"
+    base_meal: MealIn
+    scenario: ScenarioIn
+
+
+@app.post("/api/twin/{pid}/what_if", tags=["twin"], response_model=S.WhatIf, response_model_exclude_unset=True,
+          summary="what_if: pinned baseline vs scenario on the same particles; a model simulation, not a proven effect")
+def twin_what_if(pid: str, body: WhatIfIn, user: User = Depends(current_user)) -> Any:
+    _persona(pid)
+    base = body.base_meal.model_dump(exclude_none=True)
+    scen = _scenario_dict(body.scenario, base)
     u = _uctx(user, pid)
     w = get_engine().what_if(pid, _ladder(body.ladder), _eng_events(u), base, scen, offset=u.offset, rev=u.rev)
     _own(user, pid, w["baseline"]["forecast_id"], w["scenario"]["forecast_id"])
     return clean(w)
+
+
+@app.post("/api/twin/{pid}/body", tags=["twin"], response_model=S.BodyView,
+          summary="body: per-organ glucose flows of the physiology model (simulated) for the 3-D body view")
+def twin_body(pid: str, body: BodyIn, user: User = Depends(current_user)) -> Any:
+    _persona(pid)
+    meal = body.meal.model_dump(exclude_none=True) if body.meal else None
+    if body.scenario is not None and meal is None:
+        raise HTTPException(422, "A scenario needs the meal it changes (meal).")
+    scen = _scenario_dict(body.scenario, meal or {}) if body.scenario is not None else None
+    u = _uctx(user, pid)
+    out = get_engine().body(pid, _ladder(body.ladder), _eng_events(u), meal, scen, offset=u.offset, rev=u.rev)
+    _own(user, pid, out["baseline"]["forecast_id"],
+         *([out["scenario"]["forecast_id"]] if out.get("scenario") else []))
+    return clean(out)
 
 
 @app.get("/api/twin/{pid}/next_best_prick", tags=["twin"], response_model=S.NextBestPrick,

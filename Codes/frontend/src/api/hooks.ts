@@ -4,6 +4,7 @@ import type {
   AdvanceRequest,
   Assimilation,
   AssimilateRequest,
+  BodyRequest,
   ForecastRequest,
   Ladder,
   Lang,
@@ -103,6 +104,20 @@ export function useWhatIf(pid: string | null, body: WhatIfRequest | null) {
   });
 }
 
+/**
+ * Per-organ flows for the 3-D body view. `version` changes whenever the twin changes (replay offset,
+ * newest observation, forecast id), so the body never shows flows from an older twin.
+ */
+export function useBody(pid: string | null, body: BodyRequest | null, version: string | number | null) {
+  return useQuery({
+    queryKey: k("body", pid, body?.ladder ?? null, version, body?.meal ?? null, body?.scenario ?? null),
+    queryFn: () => api.body(pid as string, body as BodyRequest),
+    enabled: !!pid && !!body,
+    placeholderData: keepPreviousData,
+    staleTime: 30_000,
+  });
+}
+
 export function useFoodSwaps(lang: Lang) {
   return useQuery({ queryKey: k("swaps", lang), queryFn: () => api.foodSwaps(lang), staleTime: Infinity, placeholderData: keepPreviousData });
 }
@@ -181,7 +196,7 @@ export function useReady() {
  */
 function invalidateTwin(qc: ReturnType<typeof useQueryClient>, pid: string, keepLadder?: Ladder) {
   void qc.invalidateQueries({ queryKey: k("state", pid), predicate: (q) => keepLadder === undefined || q.queryKey[3] !== keepLadder });
-  for (const key of ["nbp", "forecast", "whatif", "outlook", "explain", "receipt", "brief"]) void qc.invalidateQueries({ queryKey: k(key, pid) });
+  for (const key of ["nbp", "forecast", "whatif", "body", "outlook", "explain", "receipt", "brief"]) void qc.invalidateQueries({ queryKey: k(key, pid) });
   for (const key of ["panel", "queue", "patients"]) void qc.invalidateQueries({ queryKey: k(key) });
 }
 

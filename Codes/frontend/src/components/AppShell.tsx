@@ -29,7 +29,6 @@ import { LANG_LABELS } from "@/i18n";
 import { useApp, type ThemePref } from "@/store/app";
 import { useAuth } from "@/store/auth";
 import { LogoMark, MockPill, Modal, Toaster, Wordmark } from "./ui";
-import { Onboarding } from "./Onboarding";
 import { SafetyAlert } from "./SafetyAlert";
 import { PresentationBar, PresentationButton } from "./Presentation";
 import { togglePresentation, usePresentationClass } from "@/lib/presentation";
@@ -37,6 +36,8 @@ import { togglePresentation, usePresentationClass } from "@/lib/presentation";
 // Overlays are separate chunks (the "Why?" drawer pulls in the chart code).
 const WhyDrawer = lazy(() => import("./WhyDrawer").then((m) => ({ default: m.WhyDrawer })));
 const Tour = lazy(() => import("./Tour").then((m) => ({ default: m.Tour })));
+// First-run cards: only fetched for people who have not seen them yet (keeps the main bundle small).
+const Onboarding = lazy(() => import("./Onboarding").then((m) => ({ default: m.Onboarding })));
 
 const NAV = [
   { to: "/", key: "twin", icon: Activity, end: true },
@@ -147,6 +148,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const user = useAuth((s) => s.user);
   const logout = useAuth((s) => s.logout);
   const startTour = useApp((s) => s.startTour);
+  const onboarded = useApp((s) => s.onboarded);
   const qc = useQueryClient();
   const [menu, setMenu] = useState(false);
   const night = NIGHT_ROUTES.includes(loc.pathname);
@@ -306,8 +308,8 @@ export function AppShell({ children }: { children: ReactNode }) {
       <Suspense fallback={null}>
         <WhyDrawer />
         <Tour />
+        {!onboarded && <Onboarding />}
       </Suspense>
-      <Onboarding />
     </div>
   );
 }

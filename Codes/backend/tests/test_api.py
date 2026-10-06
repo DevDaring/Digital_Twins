@@ -287,7 +287,7 @@ def test_doctor_panel_and_brief(client, auth) -> None:
 # ----------------------------------------------------------------------------- every remaining route
 COVERED_ROUTES = {
     "/api/health", "/api/auth/login", "/api/auth/me", "/api/patients", "/api/patients/{pid}",
-    "/api/twin/{pid}/state", "/api/twin/{pid}/forecast", "/api/twin/{pid}/what_if", "/api/twin/{pid}/next_best_prick",
+    "/api/twin/{pid}/state", "/api/twin/{pid}/forecast", "/api/twin/{pid}/what_if", "/api/twin/{pid}/body", "/api/twin/{pid}/next_best_prick",
     "/api/twin/{pid}/assimilate", "/api/twin/{pid}/outlook_90d", "/api/twin/{pid}/explain/{forecast_id}",
     "/api/twin/{pid}/reset", "/api/food/search", "/api/food/swaps", "/api/meal/samples", "/api/meal/photo",
     "/api/samples/{kind}/{name}", "/api/agent/chat", "/api/audio/{name}", "/api/speech/stt", "/api/speech/tts",

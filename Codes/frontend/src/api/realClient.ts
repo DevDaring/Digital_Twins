@@ -1,5 +1,6 @@
 import type {
   AgentReply,
+  BodyView,
   ApiClient,
   Assimilation,
   DoctorBrief,
@@ -55,6 +56,7 @@ export const realClient: ApiClient = {
     request<TwinState>(`/twin/${enc(pid)}/state?ladder=${enc(ladder)}${reveal ? "&reveal=1" : ""}`),
   forecast: (pid, body) => request<Forecast>(`/twin/${enc(pid)}/forecast`, { body: { ...body } }),
   whatIf: (pid, body) => request<WhatIf>(`/twin/${enc(pid)}/what_if`, { body: { ...body } }),
+  body: (pid, body) => request<BodyView>(`/twin/${enc(pid)}/body`, { body: { ...body } }),
   nextBestPrick: (pid, ladder) => request<NextBestPrick>(`/twin/${enc(pid)}/next_best_prick?ladder=${enc(ladder)}`),
   assimilate: (pid, body, lang) =>
     request<Assimilation>(`/twin/${enc(pid)}/assimilate${lang ? `?lang=${enc(lang)}` : ""}`, { body: { ...body } }),

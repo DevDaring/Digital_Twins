@@ -301,3 +301,49 @@ class AgentReply(_M):
     source_detail: str = Field("", description="rules | template | router ... | provider:model | template fallback after ...")
     claims: list[Claim] = Field(default_factory=list, description="every number in the reply, bound to a tool field")
     pending_action: PendingActionOut | None = Field(None, description="a proposed mutation; confirm via /api/agent/confirm")
+
+
+# ----------------------------------------------------------------------------- body view
+class FluxSeries(_M):
+    q10: list[float]
+    q50: list[float]
+    q90: list[float]
+
+
+class BloodSeries(_M):
+    q05: list[float]
+    q50: list[float]
+    q95: list[float]
+
+
+class BodyVariant(_M):
+    forecast_id: str
+    blood: BloodSeries
+    fluxes: dict[str, FluxSeries]
+    learned_correction: list[float]
+
+
+class OrganMeta(_M):
+    key: str
+    label_en: str
+    unit: str
+    description_en: str
+    status: Literal["simulated"]
+
+
+class BodyView(_M):
+    """Per-organ flows of the simplified physiology model at 'now' and every 5 min for 4 h.
+
+    t[0] is the replay now; series have len(t) points. Organ flows are SIMULATED; only blood
+    glucose is validated (reports/). ``scenario`` is present when a scenario was requested."""
+
+    persona_id: str
+    replay_now: str
+    t: list[str]
+    validated_horizon_min: int
+    label_en: str
+    validated_en: str
+    organs: list[OrganMeta]
+    baseline: BodyVariant
+    scenario: BodyVariant | None = None
+    scenario_label: str | None = None

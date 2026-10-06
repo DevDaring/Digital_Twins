@@ -25,7 +25,7 @@ import { useFoodSwaps } from "@/api/hooks";
 import { canAdvance, replayLabel } from "@/lib/replay";
 import { scenarioAssumptions, usualDinner } from "@/lib/stage";
 import { direction, peakDelta, reliabilityTenths, widthChange } from "@/lib/evidence";
-import { formatClock, freqText, mealName, pct, signed, swapLabel } from "@/lib/format";
+import { formatClock, freqText, pct, signed, swapLabel } from "@/lib/format";
 import { useApp, type ChangeKind, type StageChange, type StageDinner } from "@/store/app";
 import { EvidenceChip, SimulationLabel } from "./evidence";
 import { FreqDots, InfoTip, SyntheticBadge } from "./ui";
@@ -327,7 +327,7 @@ export function DinnerPanel({ state, dinner, change }: { state: TwinState | unde
       </div>
       {dinner ? (
         <div>
-          <p className="text-base font-bold text-moon">{dinner.source === "usual" ? t("futures.usualDinner", { name: mealName(t, dinner.title) }) : dinner.title}</p>
+          <p className="text-base font-bold text-moon">{dinner.source === "usual" ? t("whatif.usualDinner") : dinner.title}</p>
           <p className="num text-sm text-moon-2">
             {t("futures.dinnerCarbs", { n: Math.round(dinner.meal.carbs) })}
             {sd ? ` ${t("meal.plusMinus", { n: sd })}` : ""} · {t("meal.inMin", { n: dinner.meal.minutes_from_now ?? 30 })}
@@ -343,7 +343,7 @@ export function DinnerPanel({ state, dinner, change }: { state: TwinState | unde
               className="flex w-full items-center justify-between gap-2 rounded-2xl border border-marigold/50 bg-marigold/10 px-3.5 py-2.5 text-left text-sm font-semibold text-moon hover:bg-marigold/20"
             >
               <span>
-                {t("futures.usualDinner", { name: mealName(t, usual.name) })}
+                {t("whatif.usualDinner")}
                 <span className="num block text-xs font-normal text-moon-2">{t("futures.fromHistory", { n: Math.round(usual.carbs) })}</span>
               </span>
               <span className="rounded-full bg-marigold px-2.5 py-1 text-xs font-bold text-night">{t("futures.confirm")}</span>

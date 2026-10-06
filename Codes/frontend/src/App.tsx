@@ -2,10 +2,11 @@ import { lazy, Suspense, type ReactNode } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { useAuth } from "@/store/auth";
 import { AppShell } from "@/components/AppShell";
-import { LoginPage } from "@/pages/Login";
 import { useApplyTheme } from "@/hooks/useDemo";
 
-// Every page except login is its own chunk; the home page (d3 charts) loads right after sign-in.
+// Every page is its own chunk (login too, so a signed-in visit never downloads it); the home page
+// (d3 charts) loads right after sign-in.
+const LoginPage = lazy(() => import("@/pages/Login").then((m) => ({ default: m.LoginPage })));
 const TwinStagePage = lazy(() => import("@/pages/TwinStage").then((m) => ({ default: m.TwinStagePage })));
 const MealPage = lazy(() => import("@/pages/Meal"));
 const WhatIfPage = lazy(() => import("@/pages/WhatIf"));
@@ -41,7 +42,14 @@ export function App() {
   );
   return (
     <Routes>
-      <Route path="/login" element={<LoginPage />} />
+      <Route
+        path="/login"
+        element={
+          <Suspense fallback={<PageFallback />}>
+            <LoginPage />
+          </Suspense>
+        }
+      />
       <Route path="/" element={page(<TwinStagePage />)} />
       <Route path="/meal" element={page(<MealPage />)} />
       <Route path="/whatif" element={page(<WhatIfPage />)} />
