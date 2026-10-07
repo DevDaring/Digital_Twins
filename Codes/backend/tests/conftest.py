@@ -15,6 +15,8 @@ TEST_DB = os.environ.get(
 )
 os.environ["DATABASE_URL"] = TEST_DB
 os.environ["APP_MODE"] = "demo"
+# Test-only accounts (test database only): the jury account plus a second user for isolation tests.
+os.environ["DEMO_USERS"] = "TestUser:TestUser11,Reviewer2:Reviewer22"
 
 import pytest  # noqa: E402
 
@@ -55,7 +57,7 @@ def client(engine):
 
 @pytest.fixture(scope="session")
 def token(client) -> str:
-    r = client.post("/api/auth/login", json={"username": "DevTester", "password": "DevTester11"})
+    r = client.post("/api/auth/login", json={"username": "TestUser", "password": "TestUser11"})
     assert r.status_code == 200, r.text
     return r.json()["access_token"]
 
@@ -67,7 +69,7 @@ def auth(token) -> dict:
 
 @pytest.fixture(scope="session")
 def auth_b(client) -> dict:
-    """A second user (TestUser): must never see DevTester's labs, FHIR resources or forecasts."""
-    r = client.post("/api/auth/login", json={"username": "TestUser", "password": "TestUser11"})
+    """A second user (Reviewer2): must never see TestUser's labs, FHIR resources or forecasts."""
+    r = client.post("/api/auth/login", json={"username": "Reviewer2", "password": "Reviewer22"})
     assert r.status_code == 200, r.text
     return {"Authorization": f"Bearer {r.json()['access_token']}"}

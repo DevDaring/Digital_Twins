@@ -429,7 +429,7 @@ def test_meal_pending_action_confirm_via_api(client, auth) -> None:
     from pratifalan.db import PendingAction, User, session
 
     with session() as s:
-        uid = s.query(User).filter(User.username == "DevTester").one().id
+        uid = s.query(User).filter(User.username == "TestUser").one().id
         aid = uuid.uuid4().hex
         s.add(PendingAction(id=aid, user_id=uid, persona_id=PID, kind="log_meal", lang="en-IN", ladder="2",
                             payload={"name": "2 roti and toor dal", "carbs": 48.0, "t_min": 0.0},
@@ -484,9 +484,9 @@ def test_review_queue_reasons_and_review_state(client, auth, auth_b) -> None:
     r = client.post(f"/api/doctor/review/{PID}", json={"status": "follow_up", "note": "call tomorrow"}, headers=auth)
     assert r.status_code == 200
     q = {x["pid"]: x for x in client.get("/api/doctor/queue", headers=auth).json()}
-    assert q[PID]["review"]["status"] == "follow_up" and q[PID]["review"]["by"] == "DevTester"
+    assert q[PID]["review"]["status"] == "follow_up" and q[PID]["review"]["by"] == "TestUser"
     qb = {x["pid"]: x for x in client.get("/api/doctor/queue", headers=auth_b).json()}
-    assert qb[PID]["review"]["status"] in ("unreviewed", "reviewed", "follow_up") and qb[PID]["review"]["by"] != "DevTester"
+    assert qb[PID]["review"]["status"] in ("unreviewed", "reviewed", "follow_up") and qb[PID]["review"]["by"] != "TestUser"
     assert client.post(f"/api/doctor/review/{PID}", json={"status": "done"}, headers=auth).status_code == 422
     client.post(f"/api/doctor/review/{PID}", json={"status": "unreviewed", "note": ""}, headers=auth)
 
@@ -530,14 +530,14 @@ def test_clinician_role_is_required(client, auth, monkeypatch) -> None:
     from pratifalan.db import User, session
 
     with session() as s:
-        u = s.query(User).filter(User.username == "TestUser").one()
+        u = s.query(User).filter(User.username == "Reviewer2").one()
         old = u.roles
         u.roles = "patient"
     try:
-        tok = client.post("/api/auth/login", json={"username": "TestUser", "password": "TestUser11"}).json()
+        tok = client.post("/api/auth/login", json={"username": "Reviewer2", "password": "Reviewer22"}).json()
         h = {"Authorization": f"Bearer {tok['access_token']}"}
         assert client.get("/api/doctor/queue", headers=h).status_code == 403
         assert client.get("/api/doctor/panel", headers=h).status_code == 403
     finally:
         with session() as s:
-            s.query(User).filter(User.username == "TestUser").one().roles = old
+            s.query(User).filter(User.username == "Reviewer2").one().roles = old

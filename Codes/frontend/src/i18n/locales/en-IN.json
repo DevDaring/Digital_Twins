@@ -62,10 +62,14 @@
     "signingIn": "Signing in…",
     "invalid": "That username and password did not match. Please try again.",
     "error": "Could not sign in right now. Please try again.",
-    "demoHint": "Use the demo account details you were given.",
     "showPassword": "Show password",
     "hidePassword": "Hide password",
-    "intro": "A sensor-light glucose twin: calibrated on a 5-day CGM wear, then a few finger-pricks a day. It speaks your language and always shows how sure it is."
+    "intro": "A sensor-light glucose twin: calibrated on a 5-day CGM wear, then a few finger-pricks a day. It speaks your language and always shows how sure it is.",
+    "jury": {
+      "title": "Jury access",
+      "fill": "Fill in for me",
+      "note": "Public demo account for the jury and reviewers. All patients are synthetic composites; no real personal data."
+    }
   },
   "onboarding": {
     "label": "Welcome",

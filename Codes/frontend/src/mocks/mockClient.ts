@@ -59,7 +59,6 @@ const r1 = (v: number) => Math.round(v * 10) / 10;
 const food = (id: string) => FOODS.find((f) => f.id === id);
 
 const DEMO_USERS: Record<string, { display_name: string; roles: ("patient" | "clinician")[] }> = {
-  devtester: { display_name: "Dev Tester", roles: ["patient", "clinician"] },
   testuser: { display_name: "Test User", roles: ["patient", "clinician"] },
 };
 
@@ -172,7 +171,7 @@ export const mockClient: ApiClient = {
     return { access_token: `mock-${username}-${Date.now()}`, user: { username: username.trim(), ...u } };
   },
   async me() {
-    return { username: "DevTester", ...DEMO_USERS.devtester };
+    return { username: "TestUser", ...DEMO_USERS.testuser };
   },
   async health() {
     return { ok: true, mode: "demo" };
@@ -452,7 +451,7 @@ export const mockClient: ApiClient = {
   },
   async doctorReview(pid, body) {
     await wait(200, 400);
-    const r: ReviewState = { status: body.status, note: body.note || null, at: fmtLocal(new Date()), by: "DevTester" };
+    const r: ReviewState = { status: body.status, note: body.note || null, at: fmtLocal(new Date()), by: "TestUser" };
     reviews.set(pid, r);
     return r;
   },

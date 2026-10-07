@@ -39,13 +39,13 @@ def test_health(client) -> None:
 
 
 def test_login_ok_and_me(client, auth) -> None:
-    r = client.post("/api/auth/login", json={"username": "TestUser", "password": "TestUser11"})
-    assert r.status_code == 200 and r.json()["user"]["username"] == "TestUser"
+    r = client.post("/api/auth/login", json={"username": "Reviewer2", "password": "Reviewer22"})
+    assert r.status_code == 200 and r.json()["user"]["username"] == "Reviewer2"
     me = client.get("/api/auth/me", headers=auth).json()
-    assert me["username"] == "DevTester" and set(me["roles"]) <= {"patient", "clinician"}
+    assert me["username"] == "TestUser" and set(me["roles"]) <= {"patient", "clinician"}
 
 
-@pytest.mark.parametrize("u,p", [("DevTester", "wrong"), ("nobody", "DevTester11"), ("DevTester", "")])
+@pytest.mark.parametrize("u,p", [("TestUser", "wrong"), ("nobody", "TestUser11"), ("TestUser", "")])
 def test_login_fail(client, u: str, p: str) -> None:
     r = client.post("/api/auth/login", json={"username": u, "password": p})
     assert r.status_code == 401 and "detail" in r.json()

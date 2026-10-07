@@ -10,7 +10,7 @@ dinner, watch the twin learn from each new reading, and ask questions in Bengali
 
 | | |
 |---|---|
-| **Hosted demo** | https://pratifalan.duckdns.org — logins `DevTester` / `DevTester11` and `TestUser` / `TestUser11` |
+| **Hosted demo** | https://pratifalan.duckdns.org — **jury login: username `TestUser`, password `TestUser11`** (also shown on the sign-in page) |
 | **Demo video** | 15–20 minute demo video (Unlisted YouTube): [YOUTUBE LINK — add after upload] |
 | **Architecture diagram** | [docs/architecture.pdf](Codes/docs/architecture.pdf) ([.pptx](Codes/docs/architecture.pptx)) |
 | **Presentation** | [docs/presentation.pdf](Codes/docs/presentation.pdf) ([.pptx](Codes/docs/presentation.pptx)) |
@@ -278,7 +278,7 @@ cd Codes                    # the application lives in Codes/
 docker compose up --build   # an empty or missing .env works
 ```
 
-Open http://localhost:8080 and log in as **DevTester / DevTester11** (or **TestUser / TestUser11**). With no keys the
+Open http://localhost:8080 and log in as **TestUser / TestUser11**. With no keys the
 app runs in **demo mode**: the twin engine runs for real; LLM, vision and speech answers come from recorded fixtures in
 `backend/fixtures/`, including recorded audio in all four languages. Ports bind to 127.0.0.1 by default (`BIND_ADDR`,
 `WEB_PORT`, `API_PORT` change that). Use the menu (☰) → **Reset demo** before a walkthrough.

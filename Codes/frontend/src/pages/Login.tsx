@@ -2,12 +2,16 @@ import { useState, type FormEvent } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { m as motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Eye, EyeOff, Loader2 } from "lucide-react";
+import { ArrowRight, Eye, EyeOff, KeyRound, Loader2 } from "lucide-react";
 import { useAuth } from "@/store/auth";
 import { signIn } from "@/lib/session";
 import { LangSwitch } from "@/components/AppShell";
 import { LogoMark, MockPill } from "@/components/ui";
 import { useApplyTheme } from "@/hooks/useDemo";
+
+/** Public jury / reviewer account (synthetic demo data only). Shown on the sign-in page on purpose. */
+export const JURY_USER = "TestUser";
+export const JURY_PASSWORD = "TestUser11";
 
 /** A glucose-like curve repeated twice so it can drift seamlessly. */
 function riverPath(w: number, mid: number, amp: number, phase = 0) {
@@ -153,6 +157,33 @@ export function LoginPage() {
           <h2 id="login-title" className="text-xl font-bold text-moon">
             {t("login.title")}
           </h2>
+          <section
+            aria-labelledby="jury-title"
+            className="mt-4 rounded-3xl border border-marigold/50 bg-marigold/10 p-4"
+            data-testid="jury-access"
+          >
+            <p id="jury-title" className="flex items-center gap-2 text-sm font-bold text-marigold">
+              <KeyRound size={16} aria-hidden /> {t("login.jury.title")}
+            </p>
+            <dl className="mt-2 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm">
+              <dt className="text-moon-2">{t("login.username")}</dt>
+              <dd className="font-mono font-semibold text-moon" lang="en">{JURY_USER}</dd>
+              <dt className="text-moon-2">{t("login.password")}</dt>
+              <dd className="font-mono font-semibold text-moon" lang="en">{JURY_PASSWORD}</dd>
+            </dl>
+            <button
+              type="button"
+              className="mt-3 inline-flex min-h-10 items-center gap-2 rounded-full border border-marigold/60 px-4 text-sm font-semibold text-marigold hover:bg-marigold/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-marigold"
+              onClick={() => {
+                setUsername(JURY_USER);
+                setPassword(JURY_PASSWORD);
+                setError(null);
+              }}
+            >
+              {t("login.jury.fill")}
+            </button>
+            <p className="mt-2 text-xs leading-relaxed text-moon-3">{t("login.jury.note")}</p>
+          </section>
           <div className="mt-6 space-y-4">
             <div>
               <label htmlFor="username" className="mb-1.5 block text-sm font-semibold text-moon-2">
@@ -207,7 +238,6 @@ export function LoginPage() {
             {busy ? t("login.signingIn") : t("login.submit")}
             {!busy && <ArrowRight size={18} aria-hidden />}
           </button>
-          <p className="mt-4 text-center text-xs text-moon-3">{t("login.demoHint")}</p>
         </motion.form>
       </main>
       <footer className="relative z-10 px-5 pb-6 text-center text-xs leading-relaxed text-moon-3">

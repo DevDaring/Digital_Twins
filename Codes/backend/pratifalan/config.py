@@ -60,7 +60,7 @@ class Settings(BaseSettings):
 
     # Demo login accounts seeded at start-up. Format: "user:password,user:password".
     demo_users: str = Field(
-        "DevTester:DevTester11,TestUser:TestUser11", validation_alias=_alias("DEMO_USERS")
+        "TestUser:TestUser11", validation_alias=_alias("DEMO_USERS")
     )
 
     # --- LLM providers (canonical name first, then legacy names) ---
