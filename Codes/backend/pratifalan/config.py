@@ -80,7 +80,11 @@ class Settings(BaseSettings):
     gemini_api_key: str = Field("", validation_alias=_alias("GEMINI_API_KEY", "GEMINI_API_KEY_1"))
 
     # --- Speech ---
-    sarvam_api_key: str = Field("", validation_alias=_alias("SARVAM_API_KEY"))
+    # Up to three Sarvam keys, used round-robin with fail-over (canonical names first, then legacy).
+    sarvam_api_key: str = Field("", validation_alias=_alias("SARVAM_API_KEY", "SARVAM_88_API_KEY"))
+    sarvam_api_key_2: str = Field("", validation_alias=_alias("SARVAM_API_KEY_2", "SARVAM_2009_API_KEY"))
+    sarvam_api_key_3: str = Field("", validation_alias=_alias("SARVAM_API_KEY_3", "SARVAM_PHD_API_KEY"))
+    sarvam_tts_speaker: str = Field("priya", validation_alias=_alias("SARVAM_TTS_SPEAKER"))
     fish_audio_api_key: str = Field(
         "", validation_alias=_alias("FISH_AUDIO_API_KEY", "Fish_Audio_88_API_KEY")
     )
@@ -111,6 +115,10 @@ class Settings(BaseSettings):
             self.jwt_secret = _PROCESS_JWT_SECRET
             self.jwt_secret_generated = True
         return self
+
+    @property
+    def sarvam_keys(self) -> list[str]:
+        return [k for k in (self.sarvam_api_key, self.sarvam_api_key_2, self.sarvam_api_key_3) if k.strip()]
 
     @property
     def live(self) -> bool:

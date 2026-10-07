@@ -117,7 +117,7 @@ Every number below is generated from `backend/reports/*.json` and `backend/artif
 | Evaluation protocol change (nested folds) | 2-prick 60-min RMSE 30.72 → 30.56; transfer gap 9.24 → 10.80; 166 leakage checks passed | `summary.json`, `artifacts/manifest.json` |
 | Meal-photo carbs (Experiment 7) | vision-LLM carbs vs logs: MAE 30.1 g, Spearman 0.15; 60-min RMSE +4.3 mg/dL (2.1–7.1) when used | `meal_photo.json` |
 | Agent suite (134 prompts, 4 languages; 49 held out) | unsafe advice 0% / 0%, emergency recall 100% / 100% (offline / live); held-out before fix: template emergency recall 94.1%, dose block 88.9% | `agent_suite.json` |
-| Voice round trip (live) | median first audio after 8.0 s; **2.5 s target not met** (0% of 12 trips) | `voice_roundtrip.json` |
+| Voice round trip (live) | median first audio after 10.8 s; **2.5 s target not met** (0% of 12 trips) | `voice_roundtrip.json` |
 <!-- DOCS:KEYFACTS:END -->
 
 ## What changed in this round
@@ -202,7 +202,7 @@ and HbA1c are kept from the source participant, and those participants are exclu
 | Twin engine | NumPy, SciPy (vectorised RK4 ODE, particle filter), pandas / PyArrow, scikit-learn, LightGBM, SHAP |
 | Storage | PostgreSQL 16 (users, twin events, replay clocks, audit log, FHIR resources, lab revisions, reviews), Parquet (series, persona extracts), JSON (reports, FHIR bundles, fixtures, artefact manifest) |
 | LLM providers | One OpenAI-compatible client with per-role model chains from `.env` (router, planner, vision, translator) over OpenRouter, OpenAI, DeepSeek, Kimi, xAI and NanoGPT, with automatic fallback |
-| Speech | OpenAI `gpt-4o-mini-transcribe` / `gpt-4o-mini-tts` (live), Fish Audio as an alternate TTS, a Sarvam adapter (no key yet), the browser Web Speech API as last fallback; recorded audio fixtures in demo mode |
+| Speech | **Sarvam AI** first for all four Indian languages: `saaras:v4` speech-to-text and `bulbul:v3` text-to-speech (Indian voice "priya"), three keys used round-robin with fail-over; then OpenAI `gpt-4o-mini-transcribe` / `gpt-4o-mini-tts`, Fish Audio as an alternate voice, and the browser Web Speech API as the last fallback; recorded demo audio for offline mode |
 | Interoperability | FHIR R4 (Observation, Condition, MedicationStatement; validated with `fhir.resources` in tests) |
 | Packaging and hosting | Docker Compose (PostgreSQL, API, nginx web), Makefile, GitHub Actions CI (ruff, mypy, pytest, ESLint, Vitest, build, README freshness), pre-commit with gitleaks; hosted demo behind a Caddy reverse proxy with TLS |
 | Documents | `scripts/make_docs.py` (matplotlib, python-pptx, LibreOffice) and `scripts/build_readme.py` generate every figure, deck and results table from the reports |
@@ -549,18 +549,26 @@ Live mode: planner chain starts with `openrouter:openai/gpt-5.4-mini`. 8 known l
 
 ### Voice round trip (live)
 
+Current stack (`runs.sarvam_v3`): Sarvam AI `saaras:v4` speech-to-text and `bulbul:v3` text-to-speech, agent on `openai/gpt-5.4-mini` via OpenRouter. 12 trips, synthetic speech in, 3 per language.
+
 | | Value |
 |---|---|
-| Trips | 12 (synthetic speech in, 3 per language) |
-| Median time to first audio | 8.0 s (max 14.9 s); target 2.5 s **not met** (0% of trips) |
-| Median per stage | speech-to-text 0.7 s, agent 4.4 s, reply speech 3.4 s |
-| If reply audio were streamed | 5.9 s (probe, not implemented) |
-| Median time to first audio en / hi / bn / kn | 7.6 s / 7.9 s / 10.2 s / 8.1 s |
-| Median character error rate | 0.032 |
-| Intent kept after speech-to-text | 91.7% (Kannada 2 of 3) |
-| Re-run after the v3 changes (`runs.final_v3`) | median first audio 8.8 s (max 63.7 s); intent kept 83.3% (Kannada 1 of 3) |
+| Median time to first audio | 10.8 s (max 12.5 s); target 2.5 s **not met** (0% of trips) |
+| Median per stage | speech-to-text 1.7 s, agent 4.1 s, reply speech 4.3 s |
+| If reply audio were streamed | 7.4 s (probe, not implemented) |
+| Median time to first audio en / hi / bn / kn | 10.9 s / 11.4 s / 10.7 s / 10.6 s |
+| Median character error rate | 0.000 |
+| Intent kept after speech-to-text | 100.0% (Kannada 3 of 3) |
 
-<sub>Source: `backend/reports/voice_roundtrip.json`, generated 2026-10-05 17:41.</sub>
+All recorded runs (same 12 prompts):
+
+| Run | Speech provider | Median first audio | Max | Median CER | Intent kept |
+|---|---|---|---|---|---|
+| `live` | OpenAI | 8.0 s | 14.9 s | 0.032 | 91.7% |
+| `final_v3` | OpenAI | 8.8 s | 63.7 s | 0.041 | 83.3% |
+| `sarvam_v3` | Sarvam AI | 10.8 s | 12.5 s | 0.000 | 100.0% |
+
+<sub>Source: `backend/reports/voice_roundtrip.json`, generated 2026-10-07 06:01.</sub>
 <!-- DOCS:EXTRA:END -->
 
 ## What is validated, what is synthetic, what is not proven
@@ -605,7 +613,7 @@ Live mode: planner chain starts with `openrouter:openai/gpt-5.4-mini`. 8 known l
   88.2%).
 - **Two possible futures**: model simulations, not proven causal effects of a portion change or a walk.
 - **India**: no open Indian CGM dataset; Indian dish recognition checked on 4 sample photos only (a smoke test).
-- **Insulin users** (RMSE 56.1) and **voice latency** (median first audio 8.0 s vs a 2.5 s target).
+- **Insulin users** (RMSE 56.1) and **voice latency** (median first audio 10.8 s vs a 2.5 s target).
 - **No clinical validation** of any kind and no prospective study.
 <!-- DOCS:EVIDENCE:END -->
 
@@ -629,7 +637,7 @@ Live mode: planner chain starts with `openrouter:openai/gpt-5.4-mini`. 8 known l
   in Indian-language replies (`known_issues` in `backend/reports/agent_suite.json`).
 - Voice was tested with synthetic speech, not real speakers; the live round trip misses the 2.5 s first-audio target.
 - Translations are machine-produced and still need review by native speakers.
-- Sarvam speech is implemented but untested (no key); live speech uses OpenAI with Fish Audio as the alternate TTS.
+- Live speech uses Sarvam AI (Indian-language speech models) first, with OpenAI and Fish Audio as fall-backs; it was tested with synthetic speech, not yet with real speakers or noisy rooms.
 - No clinical validation and no prospective study.
 
 ## Responsible AI

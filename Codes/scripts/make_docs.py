@@ -466,8 +466,12 @@ def values(R: dict[str, dict]) -> Values:  # noqa: C901 - one flat table of name
     V["ag_n_issues"] = str(len(ag["known_issues"]))
 
     vr = R["voice_roundtrip"]
-    vh = vr["headline"]
-    vs = vr["runs"]["live"]["summary"]
+    # The CURRENT voice stack is the newest run (Sarvam first since 7 Oct 2026); older runs stay
+    # in the report and are listed side by side in the README.
+    cur_key = next(k for k in ("sarvam_v3", "final_v3", "live") if k in vr["runs"])
+    V["v_run"] = cur_key
+    vs = vr["runs"][cur_key]["summary"]
+    vh = {**vs, "n_trips": vs.get("n", vr["headline"].get("n_trips"))}
     V["v_trips"] = str(vh["n_trips"])
     V["v_target"] = f"{vr['target_ttfa_s']:.1f} s"
     V["v_ttfa"], V["v_ttfa_max"] = secs(vh["median_ttfa_ms"]), secs(vs["max_ttfa_ms"])
@@ -476,7 +480,7 @@ def values(R: dict[str, dict]) -> Values:  # noqa: C901 - one flat table of name
     V["v_share"] = pct(vh["share_meeting_2_5s"])
     V["v_cer"] = f3(vh["median_cer"])
     V["v_intent"] = pct1(vs["intent_preserved_rate"])
-    for lang, s in vr["runs"]["live"]["by_language"].items():
+    for lang, s in vr["runs"][cur_key]["by_language"].items():
         V[f"v_ttfa_{lang[:2]}"] = secs(s["median_ttfa_ms"])
         V[f"v_intent_{lang[:2]}"] = f"{round(s['intent_preserved_rate'] * s['n'])} of {s['n']}"
     v3 = vr["runs"].get("final_v3")
@@ -1580,16 +1584,25 @@ Leakage audit in `backend/artifacts/manifest.json`: {V['man_checks']} automated 
         "",
         "### Voice round trip (live)",
         "",
+        f"Current stack (`runs.{V['v_run']}`): Sarvam AI `saaras:v4` speech-to-text and `bulbul:v3` text-to-speech, "
+        f"agent on `openai/gpt-5.4-mini` via OpenRouter. {V['v_trips']} trips, synthetic speech in, 3 per language.",
+        "",
         "| | Value |",
         "|---|---|",
-        f"| Trips | {V['v_trips']} (synthetic speech in, 3 per language) |",
         f"| Median time to first audio | {V['v_ttfa']} (max {V['v_ttfa_max']}); target {V['v_target']} **not met** ({V['v_share']} of trips) |",
         f"| Median per stage | speech-to-text {V['v_stt']}, agent {V['v_agent']}, reply speech {V['v_tts']} |",
         f"| If reply audio were streamed | {V['v_streamed']} (probe, not implemented) |",
         f"| Median time to first audio en / hi / bn / kn | {V['v_ttfa_en']} / {V['v_ttfa_hi']} / {V['v_ttfa_bn']} / {V['v_ttfa_kn']} |",
         f"| Median character error rate | {V['v_cer']} |",
         f"| Intent kept after speech-to-text | {V['v_intent']} (Kannada {V['v_intent_kn']}) |",
-        f"| Re-run after the v3 changes (`runs.final_v3`) | median first audio {V['v3_ttfa']} (max {V['v3_max']}); intent kept {V['v3_intent']} (Kannada {V['v3_intent_kn']}) |",
+        "",
+        "All recorded runs (same 12 prompts):",
+        "",
+        "| Run | Speech provider | Median first audio | Max | Median CER | Intent kept |",
+        "|---|---|---|---|---|---|",
+        *[f"| `{k}` | {'Sarvam AI' if 'sarvam' in k else 'OpenAI'} | {secs(r['summary']['median_ttfa_ms'])} | "
+          f"{secs(r['summary']['max_ttfa_ms'])} | {f3(r['summary']['median_cer'])} | "
+          f"{pct1(r['summary']['intent_preserved_rate'])} |" for k, r in R["voice_roundtrip"]["runs"].items()],
         "",
         f"<sub>Source: `backend/reports/voice_roundtrip.json`, generated {V['gen_voice_roundtrip']}.</sub>",
     ]

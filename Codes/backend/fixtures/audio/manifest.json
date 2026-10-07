@@ -1,101 +1,125 @@
 {
- "generated_at": "2026-10-05T17:34:28+00:00",
+ "generated_at": "2026-10-07T05:57:54+00:00",
  "files": [
   {
    "kind": "prompt",
    "lang": "en-IN",
    "text": "If I have 2 rotis with a katori of dal for dinner now, how high will my sugar go?",
    "key": "eb2dce9258d3a7336306",
-   "status": "exists",
-   "bytes": 112128
+   "status": "written",
+   "provider": "sarvam",
+   "bytes": 87936,
+   "ms": 2844
   },
   {
    "kind": "prompt",
    "lang": "en-IN",
    "text": "What if I eat only half the rice with my fish curry tonight?",
    "key": "8d067d091db992e11b30",
-   "status": "exists",
-   "bytes": 85632
+   "status": "written",
+   "provider": "sarvam",
+   "bytes": 59520,
+   "ms": 2174
   },
   {
    "kind": "prompt",
    "lang": "en-IN",
    "text": "When should I check my sugar next?",
    "key": "4c85532c3f174a2776c9",
-   "status": "exists",
-   "bytes": 38400
+   "status": "written",
+   "provider": "sarvam",
+   "bytes": 33408,
+   "ms": 1811
   },
   {
    "kind": "prompt",
    "lang": "hi-IN",
    "text": "अगर मैं अभी 2 रोटी और एक कटोरी अरहर दाल खाऊँ तो मेरी शुगर कितनी बढ़ेगी?",
    "key": "ab18af4cd414e4ca41d5",
-   "status": "exists",
-   "bytes": 122496
+   "status": "written",
+   "provider": "sarvam",
+   "bytes": 99840,
+   "ms": 3049
   },
   {
    "kind": "prompt",
    "lang": "hi-IN",
    "text": "अगर राजमा चावल खाने के बाद 20 मिनट टहलूँ तो कितना फ़र्क पड़ेगा?",
    "key": "37ce1cb8fd9ef894f842",
-   "status": "exists",
-   "bytes": 115200
+   "status": "written",
+   "provider": "sarvam",
+   "bytes": 86784,
+   "ms": 2800
   },
   {
    "kind": "prompt",
    "lang": "hi-IN",
    "text": "अगली बार शुगर कब जाँच करूँ?",
    "key": "eab5dbc446432fb7cc8f",
-   "status": "exists",
-   "bytes": 48768
+   "status": "written",
+   "provider": "sarvam",
+   "bytes": 42240,
+   "ms": 1957
   },
   {
    "kind": "prompt",
    "lang": "bn-IN",
    "text": "রাতে ভাত আর মাছের ঝোল খেলে সুগার কত উঠবে?",
    "key": "48e3c04caca8aacab9b8",
-   "status": "exists",
-   "bytes": 83328
+   "status": "written",
+   "provider": "sarvam",
+   "bytes": 62592,
+   "ms": 2275
   },
   {
    "kind": "prompt",
    "lang": "bn-IN",
    "text": "আজ রাতে ভাত অর্ধেক করে খেলে কী হবে? সঙ্গে ডাল আর মাছের ঝোল।",
    "key": "4e27a7c5ac67bf9b1008",
-   "status": "exists",
-   "bytes": 117120
+   "status": "written",
+   "provider": "sarvam",
+   "bytes": 86784,
+   "ms": 2759
   },
   {
    "kind": "prompt",
    "lang": "bn-IN",
    "text": "পরের বার সুগার কখন মাপব?",
    "key": "84d46687664c997eaa24",
-   "status": "exists",
-   "bytes": 51456
+   "status": "written",
+   "provider": "sarvam",
+   "bytes": 38016,
+   "ms": 1936
   },
   {
    "kind": "prompt",
    "lang": "kn-IN",
    "text": "ಈಗ ಎರಡು ರಾಗಿ ಮುದ್ದೆ ಮತ್ತು ಸಾರು ತಿಂದರೆ ನನ್ನ ಸಕ್ಕರೆ ಎಷ್ಟು ಏರುತ್ತದೆ?",
    "key": "c7de58eeeb8b0dee8b40",
-   "status": "exists",
-   "bytes": 115968
+   "status": "written",
+   "provider": "sarvam",
+   "bytes": 104064,
+   "ms": 2996
   },
   {
    "kind": "prompt",
    "lang": "kn-IN",
    "text": "ಚಿತ್ರಾನ್ನ ತಿಂದ ಮೇಲೆ 20 ನಿಮಿಷ ನಡೆದರೆ ಎಷ್ಟು ಸಹಾಯ ಆಗುತ್ತದೆ?",
    "key": "23a993c04a2bd853c64c",
-   "status": "exists",
-   "bytes": 92160
+   "status": "written",
+   "provider": "sarvam",
+   "bytes": 92544,
+   "ms": 2905
   },
   {
    "kind": "prompt",
    "lang": "kn-IN",
    "text": "ಮುಂದಿನ ಸಲ ಸಕ್ಕರೆ ಯಾವಾಗ ಪರೀಕ್ಷಿಸಬೇಕು?",
    "key": "c4cc714dfd46d6b18801",
-   "status": "exists",
-   "bytes": 76800
+   "status": "written",
+   "provider": "sarvam",
+   "bytes": 52224,
+   "ms": 2041
   },
   {
    "kind": "reply",
@@ -107,9 +131,9 @@
    "grounded": true,
    "key": "381b3ed73b670b06a458",
    "status": "written",
-   "provider": "openai",
-   "bytes": 251520,
-   "ms": 3809
+   "provider": "sarvam",
+   "bytes": 269184,
+   "ms": 5608
   },
   {
    "kind": "reply",
@@ -121,9 +145,9 @@
    "grounded": true,
    "key": "57f5750ed28f920866ce",
    "status": "written",
-   "provider": "openai",
-   "bytes": 258432,
-   "ms": 7526
+   "provider": "sarvam",
+   "bytes": 268032,
+   "ms": 5461
   },
   {
    "kind": "reply",
@@ -135,9 +159,9 @@
    "grounded": true,
    "key": "9e3ee0139d4311860fa0",
    "status": "written",
-   "provider": "openai",
-   "bytes": 234624,
-   "ms": 2338
+   "provider": "sarvam",
+   "bytes": 236160,
+   "ms": 4984
   },
   {
    "kind": "reply",
@@ -149,9 +173,9 @@
    "grounded": true,
    "key": "65c6a41eaf6e936a32d8",
    "status": "written",
-   "provider": "openai",
-   "bytes": 179328,
-   "ms": 2123
+   "provider": "sarvam",
+   "bytes": 157440,
+   "ms": 3692
   },
   {
    "kind": "reply",
@@ -163,9 +187,9 @@
    "grounded": true,
    "key": "04d27d3226c095ac75bb",
    "status": "written",
-   "provider": "openai",
-   "bytes": 177792,
-   "ms": 7657
+   "provider": "sarvam",
+   "bytes": 197376,
+   "ms": 4484
   },
   {
    "kind": "reply",
@@ -177,9 +201,9 @@
    "grounded": true,
    "key": "7e651230ae7c4935f613",
    "status": "written",
-   "provider": "openai",
-   "bytes": 179328,
-   "ms": 3102
+   "provider": "sarvam",
+   "bytes": 180096,
+   "ms": 4237
   },
   {
    "kind": "reply",
@@ -191,9 +215,9 @@
    "grounded": true,
    "key": "8d6ba082226c9946b690",
    "status": "written",
-   "provider": "openai",
-   "bytes": 122496,
-   "ms": 2666
+   "provider": "sarvam",
+   "bytes": 151680,
+   "ms": 3651
   },
   {
    "kind": "reply",
@@ -205,9 +229,9 @@
    "grounded": true,
    "key": "0986b1e205b43ab792bd",
    "status": "written",
-   "provider": "openai",
-   "bytes": 137088,
-   "ms": 1782
+   "provider": "sarvam",
+   "bytes": 141696,
+   "ms": 3497
   },
   {
    "kind": "reply",
@@ -230,9 +254,9 @@
    "grounded": true,
    "key": "0c6a26a8f901de37f9e2",
    "status": "written",
-   "provider": "openai",
-   "bytes": 275328,
-   "ms": 2528
+   "provider": "sarvam",
+   "bytes": 251904,
+   "ms": 5238
   },
   {
    "kind": "reply",
@@ -244,9 +268,9 @@
    "grounded": true,
    "key": "ec9b3e36c79800cd9602",
    "status": "written",
-   "provider": "openai",
-   "bytes": 281088,
-   "ms": 3353
+   "provider": "sarvam",
+   "bytes": 237696,
+   "ms": 5024
   },
   {
    "kind": "reply",
@@ -258,9 +282,9 @@
    "grounded": true,
    "key": "0aa4c2c25419712972f1",
    "status": "written",
-   "provider": "openai",
-   "bytes": 284928,
-   "ms": 2703
+   "provider": "sarvam",
+   "bytes": 280704,
+   "ms": 5760
   },
   {
    "kind": "reply",
@@ -272,9 +296,9 @@
    "grounded": true,
    "key": "7830e4c8e3cd23616de4",
    "status": "written",
-   "provider": "openai",
-   "bytes": 208896,
-   "ms": 2868
+   "provider": "sarvam",
+   "bytes": 191616,
+   "ms": 4410
   },
   {
    "kind": "reply",
@@ -285,8 +309,10 @@
    "intent": "what_if",
    "grounded": true,
    "key": "973cb750f0cd508fa06b",
-   "status": "exists",
-   "bytes": 168192
+   "status": "written",
+   "provider": "sarvam",
+   "bytes": 165888,
+   "ms": 4191
   },
   {
    "kind": "reply",
@@ -298,9 +324,9 @@
    "grounded": true,
    "key": "178fbaef604e31e0861c",
    "status": "written",
-   "provider": "openai",
-   "bytes": 209664,
-   "ms": 2906
+   "provider": "sarvam",
+   "bytes": 180096,
+   "ms": 4362
   },
   {
    "kind": "reply",
@@ -312,9 +338,9 @@
    "grounded": true,
    "key": "c50f6dce8be4d05d331a",
    "status": "written",
-   "provider": "openai",
-   "bytes": 185088,
-   "ms": 2237
+   "provider": "sarvam",
+   "bytes": 167424,
+   "ms": 4078
   },
   {
    "kind": "reply",
@@ -326,9 +352,9 @@
    "grounded": true,
    "key": "bdfcdf96f3aa29607bf9",
    "status": "written",
-   "provider": "openai",
-   "bytes": 168960,
-   "ms": 2325
+   "provider": "sarvam",
+   "bytes": 161280,
+   "ms": 3700
   },
   {
    "kind": "reply",
@@ -351,9 +377,9 @@
    "grounded": true,
    "key": "94db3d956ab4056acb30",
    "status": "written",
-   "provider": "openai",
-   "bytes": 282624,
-   "ms": 2952
+   "provider": "sarvam",
+   "bytes": 243456,
+   "ms": 5182
   },
   {
    "kind": "reply",
@@ -365,9 +391,9 @@
    "grounded": true,
    "key": "b19546450379d2643f02",
    "status": "written",
-   "provider": "openai",
-   "bytes": 296832,
-   "ms": 6411
+   "provider": "sarvam",
+   "bytes": 239232,
+   "ms": 5067
   },
   {
    "kind": "reply",
@@ -379,9 +405,9 @@
    "grounded": true,
    "key": "03ea1a32088f445b52d2",
    "status": "written",
-   "provider": "openai",
-   "bytes": 297600,
-   "ms": 3215
+   "provider": "sarvam",
+   "bytes": 241920,
+   "ms": 5082
   },
   {
    "kind": "reply",
@@ -393,9 +419,9 @@
    "grounded": true,
    "key": "8d85c6601cbd1483e5c7",
    "status": "written",
-   "provider": "openai",
-   "bytes": 206592,
-   "ms": 2880
+   "provider": "sarvam",
+   "bytes": 158592,
+   "ms": 3787
   },
   {
    "kind": "reply",
@@ -407,9 +433,9 @@
    "grounded": true,
    "key": "1e8c02321c0543d854dc",
    "status": "written",
-   "provider": "openai",
-   "bytes": 216960,
-   "ms": 15760
+   "provider": "sarvam",
+   "bytes": 154368,
+   "ms": 3701
   },
   {
    "kind": "reply",
@@ -421,9 +447,9 @@
    "grounded": true,
    "key": "df1f011a5d3d8a96cb4b",
    "status": "written",
-   "provider": "openai",
-   "bytes": 213888,
-   "ms": 2294
+   "provider": "sarvam",
+   "bytes": 154368,
+   "ms": 3660
   },
   {
    "kind": "reply",
@@ -435,9 +461,9 @@
    "grounded": true,
    "key": "b494df7e2026a945873e",
    "status": "written",
-   "provider": "openai",
-   "bytes": 175488,
-   "ms": 2179
+   "provider": "sarvam",
+   "bytes": 122880,
+   "ms": 3297
   },
   {
    "kind": "reply",
@@ -449,9 +475,9 @@
    "grounded": true,
    "key": "a33ab670b8babac20ad5",
    "status": "written",
-   "provider": "openai",
-   "bytes": 169728,
-   "ms": 1769
+   "provider": "sarvam",
+   "bytes": 165888,
+   "ms": 4144
   },
   {
    "kind": "reply",
@@ -474,9 +500,9 @@
    "grounded": true,
    "key": "e77e12a21d4cc71f7f48",
    "status": "written",
-   "provider": "openai",
-   "bytes": 311424,
-   "ms": 3495
+   "provider": "sarvam",
+   "bytes": 322944,
+   "ms": 6377
   },
   {
    "kind": "reply",
@@ -488,9 +514,9 @@
    "grounded": true,
    "key": "462461ad634aca9e6fd1",
    "status": "written",
-   "provider": "openai",
-   "bytes": 291456,
-   "ms": 3452
+   "provider": "sarvam",
+   "bytes": 280704,
+   "ms": 5643
   },
   {
    "kind": "reply",
@@ -502,9 +528,9 @@
    "grounded": true,
    "key": "f7dad5d53198c09b226b",
    "status": "written",
-   "provider": "openai",
-   "bytes": 303360,
-   "ms": 2682
+   "provider": "sarvam",
+   "bytes": 270720,
+   "ms": 5517
   },
   {
    "kind": "reply",
@@ -515,8 +541,10 @@
    "intent": "what_if",
    "grounded": true,
    "key": "4b91e8bd6f5eb2feda21",
-   "status": "exists",
-   "bytes": 177024
+   "status": "written",
+   "provider": "sarvam",
+   "bytes": 170112,
+   "ms": 4083
   },
   {
    "kind": "reply",
@@ -539,9 +567,9 @@
    "grounded": true,
    "key": "7d348a701946a5aa1a70",
    "status": "written",
-   "provider": "openai",
-   "bytes": 226560,
-   "ms": 6555
+   "provider": "sarvam",
+   "bytes": 187392,
+   "ms": 4313
   },
   {
    "kind": "reply",
@@ -553,9 +581,9 @@
    "grounded": true,
    "key": "57bebe84e01b21822a5b",
    "status": "written",
-   "provider": "openai",
-   "bytes": 196224,
-   "ms": 2273
+   "provider": "sarvam",
+   "bytes": 171648,
+   "ms": 4184
   },
   {
    "kind": "reply",
@@ -567,9 +595,9 @@
    "grounded": true,
    "key": "1684b864dddd161c5fc2",
    "status": "written",
-   "provider": "openai",
-   "bytes": 196224,
-   "ms": 2394
+   "provider": "sarvam",
+   "bytes": 170112,
+   "ms": 4096
   },
   {
    "kind": "reply",
