@@ -1872,7 +1872,14 @@ def to_pdf(pptx: Path) -> Path:
             sys.exit(f"[make_docs] PDF conversion failed for {pptx.name}")
         pdf = pptx.with_suffix(".pdf")
         shutil.copyfile(made, pdf)
+    # Submission copies beside the root README (Unstop asks for the PDFs at top level).
+    root_name = ROOT_PDF_NAMES.get(pptx.stem)
+    if root_name:
+        shutil.copyfile(pdf, Path(__file__).resolve().parents[2] / root_name)
     return pdf
+
+
+ROOT_PDF_NAMES = {"architecture": "Pratifalan_Architecture_Diagram.pdf", "presentation": "Pratifalan_Presentation.pdf"}
 
 
 def pdf_pages(pdf: Path) -> int:
